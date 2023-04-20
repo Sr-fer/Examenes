@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Información del usuario</title>
+</head>
+<body>
+	<h1>Información del usuario</h1>
+	<p><strong>Agente de usuario:</strong> <span id="userAgent"></span></p>
+	<p><strong>Sistema operativo:</strong> <span id="OS"></span></p>
+	<p><strong>Navegador:</strong> <span id="browser"></span></p>
+	<p><strong>Tamaño de memoria:</strong> <span id="memory"></span> GB</p>
+	<p><strong>Lenguaje predeterminado:</strong> <span id="language"></span></p>
+	<p><strong>Carga:</strong> <span id="loading"></span></p>
+	<p><strong>Visualización de PDF:</strong> <span id="pdf"></span></p>
+	<p><strong>Porcentaje de batería:</strong> <span id="battery"></span>%</p>
+	
+<script>
+window.onload = function() {
+
+	document.getElementById("userAgent").innerHTML = window.navigator.userAgent;
+	document.getElementById("OS").innerHTML = sistemaOperativo();
+	document.getElementById("browser").innerHTML = detectarNavegador();
+	document.getElementById("memory").innerHTML = memoriaDispositivo();
+	document.getElementById("language").innerHTML = detectarLenguaje();
+	document.getElementById("loading").innerHTML = enLinea();
+	document.getElementById("pdf").innerHTML = (typeof PDFJS === 'undefined') ? "No se puede mostrar" : "Se puede mostrar";
+	detectBatteryStatus();
+};
+
+function sistemaOperativo() {
+    var userAgent = window.navigator.userAgent,
+        platform = window.navigator.platform,
+        MAC = ['MacintOSh', 'MacIntel', 'MacPPC', 'Mac68K'],
+        Windows = ['Win32', 'Win64', 'Windows', 'WinCE'],
+        IOS = ['iPhone', 'iPad', 'iPod'],
+        OS = null;
+
+    if (MAC.indexOf(platform) !== -1) {
+        OS = 'Mac OS';
+    } else if (IOS.indexOf(platform) !== -1) {
+        OS = 'iOS';
+    } else if (Windows.indexOf(platform) !== -1) {
+        OS = 'Windows';
+    } else if (/Android/.test(userAgent)) {
+        OS = 'Android';
+    } else if (!OS && /Linux/.test(platform)) {
+        OS = 'Linux';
+    }
+    return OS;
+}
+
+function detectarNavegador() {
+    var userAgent = window.navigator.userAgent,
+        navegadores
+         = {
+            Chrome: /chrome/i,
+            Safari: /safari/i,
+            Firefox: /firefox/i,
+            IE: /internet explorer/i,
+            Edge: /edge/i,
+            Opera: /opera|opr/i,
+        },
+        selectedBrowser = "Desconocido";
+    for (var key in navegadores
+    ) {
+        if (navegadores
+        [key].test(userAgent)) {
+            selectedBrowser = key;
+            break;
+        }
+    }
+    return selectedBrowser;
+}
+
+function detectarLenguaje() {
+    return window.navigator.language || window.navigator.userLanguage;
+}
+
+function enLinea() {
+    return (window.navigator.onLine) ? "En línea" : "Fuera de línea";
+}
+
+function detectBatteryStatus() {
+    if ('getBattery' in navigator) {
+        navigator.getBattery().then(function(battery) {
+            updateBatteryStatus(battery);
+            battery.onchargingchange = function() {
+                updateBatteryStatus(battery);
+            };
+        });
+    } else {
+        document.getElementById("battery").innerHTML = "Desconocido";
+    }
+}
+
+function updateBatteryStatus(battery) {
+    var nivelBateria = battery.level * 100;
+    var cargando = battery.charging;
+    document.getElementById("battery").innerHTML = nivelBateria.toFixed(0) + " % (" + (cargando ? "Cargando" : "No cargando") + ")";
+}
+
+navigator.getBattery().then(function(battery) {
+	if (battery.level < 0.25) {
+	    document.getElementsByTagName("body")[0].innerHTML = "<h1>No se puede cargar la página</h1><p>La carga de la batería es demasiado baja.</p>";
+	}
+});
+
+function memoriaDispositivo() {
+	if (navigator.deviceMemory) {
+		return navigator.deviceMemory.toFixed(2);
+	} else {
+		return "Desconocido";
+	}
+	}
+</script>
+</body>
+</html>

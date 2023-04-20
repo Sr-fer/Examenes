@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lista de Tareas</title>
+	<style>
+		.container {
+			max-width: 700px;
+			margin: 0 auto;
+			padding: 20px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0,0,0,0.1);
+		}
+
+		input[type="text"] {
+			width: 95%;
+			height: 30px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 16px;
+			margin-bottom: 10px;
+		}
+
+		button {
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			padding: 10px 20px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		li {
+			padding: 10px;
+			border-bottom: 1px solid #ccc;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		li:last-child {
+			border-bottom: none;
+		}
+
+		.done {
+			text-decoration: line-through;
+			color: #ccc;
+		}
+
+		.alert {
+			background-color: #f44336;
+			color: white;
+			padding: 10px;
+			border-radius: 5px;
+			margin-top: 10px;
+			text-align: center;
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Lista de Tareas</h1>
+		<input type="text" id="aniadirTarea" placeholder="Añade una tarea">
+		<button id="botonAniadido">Añadir</button>
+		<ul id="listaTareas"></ul>
+		<div class="alert" id="alertas">Has alcanzado el límite de tareas</div>
+	</div>
+
+	<script>
+        var aniadirTarea = document.getElementById("aniadirTarea");
+        var botonAniadido = document.getElementById("botonAniadido");
+        var listaTareas = document.getElementById("listaTareas");
+        var alertas = document.getElementById("alertas");
+
+
+        var contador = 0;
+
+
+        function implementarTareas() {
+	
+        var textoTarea = aniadirTarea.value.trim();
+
+	
+	    if (textoTarea.length < 1 || textoTarea.length > 100 || !/^[a-zA-Z0-9\s\-_.,!"'/$]*$/.test(textoTarea)) {
+		    alert("Por favor ingresa una tarea válida");
+		return;
+	    }
+
+	
+	    var tarea = document.createElement("li");
+
+	
+	    tarea.innerText = textoTarea;
+
+	
+	    var botonHecho = document.createElement("button");
+	    botonHecho.innerText = "Terminado";
+
+	
+	    botonHecho.addEventListener("click", function() {
+		    tarea.classList.toggle("done");
+	    });
+
+	
+	    tarea.appendChild(botonHecho);
+
+	
+	    listaTareas.appendChild(tarea);
+
+	
+	    contador++;
+
+	
+	    if (contador === 10) {
+		    alertas.style.display = "block";
+		    aniadirTarea.disabled = true;
+		    botonAniadido.disabled = true;
+	    }
+    }
+
+    botonAniadido.addEventListener("click", implementarTareas);
+    </script>
+</body>
+</html>

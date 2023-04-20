@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Estimación de posición</title>
+	<style>
+		#mapa {
+			height: 450px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Estimación de posición</h1>
+	
+	<button onclick="obtenerPosicion()">Estimar mi posición</button>
+	
+	<div id="posicion"></div>
+	<div id="precision"></div>
+	<div id="mapa"></div>
+	<div id="enlace"></div>
+	
+	<hr>
+	
+	<button onclick="seguirPosicion()">Sígueme</button>
+	
+	<div id="historial"></div>
+	
+	<script>
+
+		var historial = [];
+		var intervalo;
+
+
+		function obtenerPosicion() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(mostrarPosicion);
+			} else {
+				alert("Tu navegador no soporta la API de geolocalización");
+			}
+		}
+
+
+        function mostrarPosicion(posicion) {
+            var latitud = posicion.coords.latitude;
+            var longitud = posicion.coords.longitude;
+            var altitud = posicion.coords.altitude !== null ? posicion.coords.altitude : "No disponible";
+            var precision = posicion.coords.accuracy;
+			var enlace = `https://maps.googleapis.com/maps/api/staticmap?center=${latitud},${longitud}&zoom=14&size=400x400&maptype=road`
+			
+
+			document.getElementById("posicion").innerHTML = "Latitud: " + latitud + "<br>Longitud: " + longitud + "<br>Altitud: " + altitud;
+			document.getElementById("precision").innerHTML = "Precisión: " + precision + " metros";
+			document.getElementById("enlace").innerHTML = enlace
+			
+
+			var mapa = new google.maps.Map(document.getElementById('mapa'), {
+				center: {lat: latitud, lng: longitud},
+				zoom: 16
+			});
+			var marker = new google.maps.Marker({
+				position: {lat: latitud, lng: longitud},
+				map: mapa
+			});
+		}
+
+
+    function seguirPosicion() {
+        if (navigator.geolocation) {
+            intervalo = setInterval(function() {
+        navigator.geolocation.getCurrentPosition(mostrarSeguimiento);
+        }, 10000);
+    } else {
+        alert("Ha sucedido algo inesperado");
+    }
+    }
+
+
+	function mostrarSeguimiento(posicion) {
+		var latitud = posicion.coords.latitude;
+		var longitud = posicion.coords.longitude;
+		var altitud = posicion.coords.altitude !== null ? posicion.coords.altitude : "No disponible";
+		var precision = posicion.coords.accuracy;
+		var fecha = new Date().toLocaleString(); 
+
+
+		var nuevoItem = document.createElement("li");
+		nuevoItem.innerHTML = "Latitud: " + latitud + "<br>Longitud: " + longitud + "<br>Altitud: " + altitud + "<br>Precisión: " + precision + " metros<br>Fecha y hora: " + fecha;
+		document.getElementById("historial").appendChild(nuevoItem);
+
+
+		var posicionActual = {
+			latitud: latitud,
+			longitud: longitud,
+			altitud: altitud,
+			precision: precision,
+			fecha: fecha
+		};
+		historial.push(posicionActual);
+		localStorage.setItem("historial", JSON.stringify(historial));
+	}
+
+
+	window.onload = function() {
+		var historialGuardado = localStorage.getItem("historial");
+		if (historialGuardado) {
+			historial = JSON.parse(historialGuardado);
+			for (var i = 0; i < historial.length; i++) {
+				var posicion = historial[i];
+				var nuevoItem = document.createElement("li");
+				nuevoItem.innerHTML = "Latitud: " + posicion.latitud + "<br>Longitud: " + posicion.longitud + "<br>Altitud: " + posicion.altitud + "<br>Precisión: " + posicion.precision + " metros<br>Fecha y hora: " + posicion.fecha;
+				document.getElementById("historial").appendChild(nuevoItem);
+			}
+		}
+	};
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY"></script>
+</body>
+</html>
