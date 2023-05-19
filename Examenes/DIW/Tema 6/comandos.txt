@@ -1,0 +1,31 @@
+Edición de Imagen
+1.magick convert -format webp input.jpg output.webp
+2.magick convert -quality 25 input.jpg output.jpg
+3.magick convert input.jpg -crop -500-500 output.jpg
+4.magick convert input.jpg -rotate 45 output.jpg
+5.magick convert input.jpg -gravity northwest -fill white -pointsize 20 -annotate +10+10 "Foto Examen" output.jpg
+6.magick convert input.jpg -implode 0.5 output.jpg
+
+Edición de Audio
+1.ffprobe -i sample4.mp3 -show_entries format=duration -v quiet -of csv="p=0"
+2.ffprobe -i sample4.mp3 -show_entries stream=codec_name -select_streams a:0 -v quiet -of csv="p=0"
+3.ffprobe -i sample4.mp3 -show_entries stream=bit_rate -select_streams a:0 -v quiet -of csv="p=0"
+4.ffmpeg -i sample4.mp3 -c:a libopus output.opus
+5.ffmpeg -i sample4.mp3 -ss 0 -to 0.5 -c copy output.mp3
+6.ffmpeg -i sample4.mp3 -f segment -segment_times 0,0.25,0.5,0.75 -c copy output%d.mp3
+
+Edición de Video
+1.ffprobe -i sample_640x360.avi -show_entries format=duration -v quiet -of csv="p=0"
+2.ffmpeg -i sample_640x360.avi -c:v libvpx -b:v 1M -c:a libvorbis output.webm
+3.ffmpeg -i sample_640x360.avi -vn -acodec copy output_audio.mp3
+4.ffmpeg -i sample_640x360.avi -ss 0 -t $(ffprobe -i sample_640x360.avi -show_entries format=duration -v quiet -of csv="p=0")/2 -c:v copy -c:a copy output_cut.avi
+5.ffmpeg -i sample_640x360.avi -vf "scale=1280:720" -c:v libx264 -preset fast -c:a copy output_resized.avi
+6.ffmpeg -i sample_640x360.avi -vf fps=1 -vframes 8 output_%d.jpg
+
+Licencias
+
+1.Esta licencia permite usar, modificar y distribuir una obra que no les pertenece siempre y cuando cumplan las condiciones de dar atribucón al propietario de la obra dando a conocer el autor original, asi como de no comerciar con la obra.
+
+
+2.Esta licencia es parecida a la anterior, se puede usar, modificar y distribuir dando credito al autor original asi como de no comerciar con ella, pero añade un tercer factor que es que cualquier cambio a la obra para ser distribuido tiene que tener una licencia similar a la de la obra original.
+
