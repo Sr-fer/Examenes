@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .general {
+            width: 800px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Imagen 800x600</h1>
+    <img src="imags/Greven,_Fuestrup,_Dortmund-Ems-Kanal,_Alte_Fahrt,_Sicherheitssperrtor_--_2021_--_3918.jpg" alt="Imagen 800x600" class="general">
+    <br>
+    <h2>Revisa el formato de la imagen</h2>
+    <picture>
+        <source srcset="imags/Найкращі_миті_життя.webp" type="image/webp">
+        <source srcset="imags/Найкращі_миті_життя.jpg" type="image/jpeg">
+        <source srcset="imags/Найкращі_миті_життя.png" type="image/png">
+        <img src="imags/Найкращі_миті_життя.jpg" alt="Revisa el formato de la imagen">
+    </picture>
+    <br>
+    <h2>Imagen según el ancho de pantalla</h2>
+    <picture>
+        <source media="(max-width: 350px)" srcset="imags/Найкращі_миті_життя.jpg">
+        <source media="(min-width: 351px) and (max-width: 1024px)" srcset="imags/Greven,_Fuestrup,_Dortmund-Ems-Kanal,_Alte_Fahrt,_Sicherheitssperrtor_--_2021_--_3918.jpg">
+        <source media="(min-width: 1025px)" srcset="imags/Purple_roller_(Coracias_naevius_mosambicus).jpg">
+        <img src="imags/Greven,_Fuestrup,_Dortmund-Ems-Kanal,_Alte_Fahrt,_Sicherheitssperrtor_--_2021_--_3918.jpg" alt="Imagen según el ancho de pantalla">
+    </picture>
+</body>
+</html>

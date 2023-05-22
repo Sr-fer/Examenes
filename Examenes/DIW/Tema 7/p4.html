@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <h1>Lienzo de dibujo</h1>
+    <canvas id="canvas" width="400" height="400"></canvas>
+    <br>
+    <input type="color" id="colorPicker">
+
+    <style>
+        #canvas {
+            border: 1px solid black;
+        }
+    </style>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        let isDrawing = false;
+        let color = '#000000';
+        
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+        
+        function startDrawing(event) {
+            isDrawing = true;
+            context.beginPath();
+            context.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+        }
+        
+        function draw(event) {
+            if (isDrawing) {
+                context.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+                context.strokeStyle = color;
+                context.lineWidth = 5;
+                context.stroke();
+            }
+        }
+        
+        function stopDrawing() {
+            isDrawing = false;
+        }
+        
+        const colorPicker = document.getElementById('colorPicker');
+        colorPicker.addEventListener('input', changeColor);
+        
+        function changeColor() {
+            color = colorPicker.value;
+        }
+    </script>
+</body>
+</html>
