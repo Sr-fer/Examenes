@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>OAuth con Google</title>
+</head>
+<body>
+  <h1>OAuth con Google</h1>
+  
+  <div id="google_signin_button"></div>
+  
+  <div id="detalles_usuario" style="display: none;">
+    <h2>Usuario autenticado</h2>
+    <p>Nombre: <span id="nombre_usuario"></span></p>
+    <p>Apellido: <span id="apellido_usuario"></span></p>
+    <img id="foto_usuario" src="" alt="Foto del usuario">
+    <button id="cerrar_sesion_button">Cerrar sesión</button>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="main.js"></script>
+  </div>
+</body>
+</html>
