@@ -1,0 +1,39 @@
+version: '3'
+services:
+  db:
+    container_name: postgres
+    image: postgres:13.11
+    environment:
+      POSTGRES_USER: fer
+      POSTGRES_PASSWORD: fer
+      POSTGRES_DB: viajes
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    ports:
+      - "5050:80" 
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: fer@fer.fer
+      PGADMIN_DEFAULT_PASSWORD: fer
+  app:
+    build:
+      context: ./viajes
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+    environment:
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_NAME: viajes
+      DB_USER: fer
+      DB_PASSWORD: fer
+volumes: 
+  postgres:
