@@ -73,5 +73,6 @@ try {
             <li>Origen <?php echo $viajePorOrigen['nombre']; ?>: <?php echo $viajePorOrigen['cantidad']; ?> viajes</li>
         <?php endforeach; ?>
     </ul>
+    <a href=/gestion.php>Modificar Datos</a>
 </body>
 </html>
